@@ -1,3 +1,6 @@
+**Task Management Server**
+This is the backend server for the Task Management application, featuring task tracking, user management, WebSocket notifications, and Kafka event streaming.
+
 **Prerequisites**
 Node.js (16 or later)
 Docker and Docker Compose
