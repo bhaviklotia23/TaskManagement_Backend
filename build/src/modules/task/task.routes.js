@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var task_controller_1 = require("./task.controller");
+var auth_1 = require("../../middleware/auth");
+var router = (0, express_1.Router)();
+var taskController = new task_controller_1.TaskController();
+router.use(auth_1.authenticate);
+router.get("/", function (req, res, next) { return taskController.getAllTasks(req, res, next); });
+router.post("/", function (req, res, next) { return taskController.createTask(req, res, next); });
+router.get("/:id", function (req, res, next) { return taskController.getTaskById(req, res, next); });
+router.put("/:id", function (req, res, next) { return taskController.updateTask(req, res, next); });
+router.delete("/:id", function (req, res, next) { return taskController.deleteTask(req, res, next); });
+exports.default = router;

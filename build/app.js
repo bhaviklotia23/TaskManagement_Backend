@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __importDefault(require("express"));
+require("reflect-metadata");
+var dotenv_1 = __importDefault(require("dotenv"));
+require("./src/config/db");
+var errorHandler_1 = require("./src/middleware/errorHandler");
+var user_routes_1 = __importDefault(require("./src/modules/user/user.routes"));
+var task_routes_1 = __importDefault(require("./src/modules/task/task.routes"));
+var cors_1 = __importDefault(require("cors"));
+dotenv_1.default.config();
+var app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use((0, cors_1.default)());
+app.use("/api/v1/user", user_routes_1.default);
+app.use("/api/v1/task", task_routes_1.default);
+app.use(errorHandler_1.errorHandler);
+exports.default = app;

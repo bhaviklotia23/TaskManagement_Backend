@@ -1,0 +1,47 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: TaskManagement
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    depends_on:
+      - postgres
+      - kafka
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: TaskManagement
+      PORT: 5000
+      JWT_SECRET: jggwdjskrljwekl
+      KAFKA_BROKER: kafka:9092
+      KAFKA_CLIENT_ID: task-manager-app
+      KAFKA_GROUP_ID: task-consumers
+    ports:
+      - "5000:5000"
+    command: npm run start
