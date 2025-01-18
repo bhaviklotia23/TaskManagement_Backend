@@ -128,15 +128,16 @@ export class TaskService {
       }
     }
 
-    for (const change of changes) {
-      await sendKafkaEvent("task-updates", {
+    const kafkaMessages = changes.map(change =>
+      sendKafkaEvent("task-updates", {
         taskId: id,
         changeType: change.changeType,
         previousValue: change.previousValue,
         newValue: change.newValue,
         timestamp: new Date(),
-      });
-    }
+      })
+    );
+    await Promise.all(kafkaMessages);
 
     await this.taskRepository.update(id, updatedFields);
 
